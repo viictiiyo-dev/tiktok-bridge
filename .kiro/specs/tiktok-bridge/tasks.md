@@ -67,7 +67,7 @@
   - Condición observable: `pytest` verde en schemas, free-miss y 402 con ejemplo.
   - _Requirements: 1, 2_
 - [x] 6.2 Pago test → 200 real en testnet, luego 1 settle mainnet mínimo antes de anunciar cobro
-  - VENTA 1 2026-10-11: $0.08, tx f52140…b1ea (recuperada por logs). VENTA 2: $0.08, tx 0x7e5b…3na4 (capturada ya con el fix). Total /stats: 2 ventas / 0.16 USDC. MCP público en /tiktok-mcp/mcp + autostart cableado.
+  - VENTA 3: $0.08, tx 0xdde0…97ef (capturada al primer intento). Total /stats: 3 ventas / 0.24 USDC. Validador CDP: valid:true/accepted. Bazaar: processing (indexación async en curso).
   - Condición observable: `/stats` muestra 1 venta `settled_by_facilitator` mainnet; sin esto no se publica Bazaar.
   - _Depends: 2.2, 3.2, 4.1, 5.2_
   - _Requirements: 2, 3, 5_
