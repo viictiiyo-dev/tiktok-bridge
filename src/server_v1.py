@@ -197,11 +197,13 @@ async def stats(request: Request):
 
 @app.post("/v1/tiktok/search")
 async def search(body: dict, request: Request):
+    # Orden deliberado: sin firma siempre 402 (el validador CDP y la sonda Bazaar
+    # mandan body vacío; un 400 aquí nos desindexa). Solo con firma se valida input.
+    if not request.headers.get("PAYMENT-SIGNATURE"):
+        return _402(challenge_402(str(request.url), "search", {"videos": MOCK_VIDEOS}))
     q = str((body or {}).get("q", "")).strip()
     if not q:
         return JSONResponse(status_code=400, content={"error": "q requerido"})
-    if not request.headers.get("PAYMENT-SIGNATURE"):
-        return _402(challenge_402(str(request.url), "search", {"videos": MOCK_VIDEOS}))
     if pw is None:
         return JSONResponse(status_code=502, content={"error": "paywall no configurado"})
     import base64 as _b64
@@ -274,22 +276,22 @@ async def search(body: dict, request: Request):
 
 @app.post("/v1/tiktok/perfil")
 async def perfil(body: dict, request: Request):
+    if not request.headers.get("PAYMENT-SIGNATURE"):
+        return _402(challenge_402(str(request.url), "perfil", {"user": "cocina_es"}))
     user = str((body or {}).get("user", "")).strip()
     if not user:
         return JSONResponse(status_code=400, content={"error": "user requerido"})
-    if not request.headers.get("PAYMENT-SIGNATURE"):
-        return _402(challenge_402(str(request.url), "perfil", {"user": user}))
     # Backend perfil aún no existe: 501 ANTES de verificar/liquidar (nunca se cobra).
     return JSONResponse(status_code=501, content={"error": "endpoint en construccion: solo /v1/tiktok/search cobra hoy"})
 
 
 @app.post("/v1/tiktok/comments")
 async def comments(body: dict, request: Request):
+    if not request.headers.get("PAYMENT-SIGNATURE"):
+        return _402(challenge_402(str(request.url), "comments", {"id": "7635981647359380758"}))
     vid = str((body or {}).get("id", "")).strip()
     if not vid:
         return JSONResponse(status_code=400, content={"error": "id requerido"})
-    if not request.headers.get("PAYMENT-SIGNATURE"):
-        return _402(challenge_402(str(request.url), "comments", {"id": vid}))
     # Backend comments aún no existe: 501 ANTES de verificar/liquidar (nunca se cobra).
     return JSONResponse(status_code=501, content={"error": "endpoint en construccion: solo /v1/tiktok/search cobra hoy"})
 

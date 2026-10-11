@@ -40,9 +40,12 @@ def test_402_con_ejemplo():
 
 
 def test_400s():
-    assert client.post("/v1/tiktok/search", json={}).status_code == 400
-    assert client.post("/v1/tiktok/perfil", json={}).status_code == 400
-    assert client.post("/v1/tiktok/comments", json={}).status_code == 400
+    # Sin firma SIEMPRE 402 aunque el body venga vacío (validador CDP + sonda Bazaar).
+    for route, payload in (("/v1/tiktok/search", {}), ("/v1/tiktok/perfil", {}),
+                           ("/v1/tiktok/comments", {})):
+        res = client.post(route, json=payload)
+        assert res.status_code == 402
+        assert "payment-required" in res.headers
 
 
 def test_normalize_y_freemiss():
