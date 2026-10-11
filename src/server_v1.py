@@ -260,8 +260,10 @@ async def search(body: dict, request: Request):
     tx = str(_rcpt.get("transactionHash") or stl.get("txHash") or stl.get("transactionHash")
              or stl.get("transaction") or stl.get("hash") or "")
     try:
-        with open("settle_last.json", "w", encoding="utf-8") as _f:
-            _f.write(_json.dumps(stl, separators=(",", ":"))[:4000])
+        _audit = str(Path(pw.SALES_PATH).parent / "settle_last.json")
+        with open(_audit, "w", encoding="utf-8") as _f:
+            _f.write(_json.dumps({"settle": stl, "bazaar": pw.bazaar_status()},
+                                 separators=(",", ":"))[:4000])
     except OSError:
         pass
     _pl = payload.get("payload", payload)

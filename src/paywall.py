@@ -78,6 +78,8 @@ def methods(kind: str = "search") -> list:
 
 
 def challenge(url: str, kind: str, example: dict) -> dict:
+    # El validador CDP exige info.input.method; el helper no lo infiere sin route key,
+    # así que se inyecta a mano tras generar la extensión oficial.
     inputs = {"search": ({"q": "paella", "max": 20},
                          {"properties": {"q": {"type": "string"}, "max": {"type": "integer"}},
                           "required": ["q"]}),
@@ -102,6 +104,7 @@ def challenge(url: str, kind: str, example: dict) -> dict:
         ch["extensions"] = declare_discovery_extension(
             input=body_ex, input_schema=schema, body_type="json",
             output=OutputConfig(example=example))
+        ch["extensions"]["bazaar"]["info"]["input"]["method"] = "POST"
     except Exception:
         pass
     return ch
@@ -132,8 +135,26 @@ def structural_ok(payload_b64: str, kind: str) -> tuple:
     return True, "ok-estructural"
 
 
+LAST_EXT: dict = {}
+
+
+def bazaar_status() -> dict:
+    """Decodifica EXTENSION-RESPONSES del último settle: success/processing/rejected + motivo."""
+    raw = LAST_EXT.get("/settle", "")
+    if not raw:
+        return {"status": "sin-datos"}
+    try:
+        data = json.loads(base64.b64decode(raw).decode("utf-8"))
+        bz = (data.get("bazaar") or {})
+        return {"status": bz.get("status", "?"),
+                "reason": str(bz.get("rejectedReason", ""))[:300]}
+    except Exception as e:
+        return {"status": "ilegible", "reason": type(e).__name__}
+
+
 def facilitator_call_cdp(path: str, payload: dict, requirements: dict) -> dict:
     # gotcha Context7: create_facilitator_config() lee env o acepta (id, secret); headers por path.
+    # El header EXTENSION-RESPONSES (bazaar: success/processing/rejected) se guarda en LAST_EXT.
     from cdp.x402 import create_facilitator_config
     kid, sec = _cdp_key()
     if not (kid and sec):
@@ -146,7 +167,12 @@ def facilitator_call_cdp(path: str, payload: dict, requirements: dict) -> dict:
     req = urllib.request.Request(CDP_FACILITATOR_URL + path, data=body, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=25) as r:
-            return json.load(r)
+            data = json.load(r)
+            try:
+                LAST_EXT[path] = r.headers.get("EXTENSION-RESPONSES", "")
+            except Exception:
+                pass
+            return data
     except urllib.error.HTTPError as e:
         if e.code in (400, 422):
             try:
