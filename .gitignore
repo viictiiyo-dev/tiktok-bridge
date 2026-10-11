@@ -14,6 +14,8 @@ __pycache__/
 .pytest_cache/
 cc-sdd/
 veredicto-skills-upstream/
+.agents/
+skills-lock.json
 payment_requests.sqlite3
 payment_requests.sqlite3-wal
 payment_requests.sqlite3-shm
