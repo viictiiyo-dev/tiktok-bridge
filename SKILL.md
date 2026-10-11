@@ -1,40 +1,39 @@
 ---
 name: tiktok-bridge-search
-description: Busca videos públicos de TikTok y devuelve JSON limpio (id, desc, autor, likes, fecha, hashtags, cover). Pago por petición 0.08 USDC en Base mainnet vía x402, sin cuenta ni API key. Free-miss si no hay resultados.
+description: Busca vídeos públicos de TikTok y devuelve JSON normalizado, con URL, portada, fecha ISO-8601 y métricas disponibles. Pago por petición vía x402 en Base mainnet.
 ---
 
-# TikTok Bridge — Consultas TikTok para agentes
+# TikTok Bridge — consultas TikTok para agentes
 
-Puente que sustituye el flujo Apify (cuenta + token + run async + polling + dataset) por 1 fetch con wallet. Solo contenido público. Sin login.
+Puente x402 con un contrato JSON normalizado para agentes. La búsqueda usa respaldo entre proveedores cuando la respuesta es vacía, escasa o lexicalmente poco relevante; fusiona registros duplicados, clasifica resultados por una heurística lexical y aplica caché. Solo contenido público. No accede a perfiles privados ni a vídeos privados.
 
 ## Búsqueda — x402 en Base mainnet
 
-- **0.08 USDC por petición.** `POST https://veredicto.dpdns.org/v1/tiktok/search`
-- Red: Base mainnet, CAIP-2 `eip155:8453`, USDC. Sin suscripción. Nunca compartas claves privadas.
+- 0.08 USDC por petición, máximo 20 vídeos (max entre 1 y 20): POST https://veredicto.dpdns.org/v1/tiktok/search
+- Red: Base mainnet, CAIP-2 eip155:8453, USDC. Sin suscripción. Nunca compartas claves privadas.
 
-Primero provoca el 402 (sin firma):
+Primero envía la solicitud sin firma para obtener HTTP 402:
 
-```http
-POST https://veredicto.dpdns.org/v1/tiktok/search
-Content-Type: application/json
+    POST https://veredicto.dpdns.org/v1/tiktok/search
+    Content-Type: application/json
 
-{"q": "paella", "max": 20}
-```
+    {"q":"paella","max":20}
 
-Responde HTTP 402 con requisitos + ejemplo output + cabecera `PAYMENT-REQUIRED`. Un cliente x402 compatible construye/firma el payload y reintenta el POST con `PAYMENT-SIGNATURE` (base64) y el mismo JSON. Con pago válido: 200 + `videos[]` + cabecera `PAYMENT-RESPONSE`. Sin resultados: 200 con `free_miss:true` sin cargo.
+Un cliente x402 compatible firma el reto y reintenta con PAYMENT-SIGNATURE y el mismo JSON. Con pago válido devuelve JSON y PAYMENT-RESPONSE. Si los proveedores responden pero no hay vídeos utilizables, devuelve free_miss sin settle. Si los proveedores fallan, devuelve 202 con retry-hint en lugar de confundir el error con ausencia de resultados.
 
-```json
-{"q": "paella", "max": 20}
-```
+Respuesta de búsqueda: q, videos, search_meta, cached y ts. search_meta informa el número de fuentes consultadas sin revelar sus IDs, si hubo respaldo, número de resultados, relevancia media lexical y cobertura de portada/URL. Cada vídeo contiene id, desc, autor, likes, fecha, hashtags, cover y url; los campos disponibles incluyen autor_nombre, autor_usuario, views, comments, shares, saves, duration, language, is_ad y relevancia. fecha es ISO-8601 UTC; hashtags es una lista de strings; los datos no disponibles quedan como null o cadena vacía. relevancia es una heurística lexical orientativa entre 0 y 1.
 
-Respuesta: `{q, videos: [{id, desc, autor, likes, fecha, hashtags, cover}], cached, ts}`.
+## Perfil y comentarios
 
-## Perfil y comments (en construcción)
+- POST https://veredicto.dpdns.org/v1/tiktok/perfil con {"user":"cocina_es"} — 0.08 USDC. Devuelve bio, seguidores y publicaciones recientes.
+- POST https://veredicto.dpdns.org/v1/tiktok/comments con {"id":"7635981647359380758","max":50} — 0.05 USDC. Devuelve ID, autor, handle/nombre, texto, likes, fecha ISO-8601, respuestas e idioma cuando estén disponibles; campos desconocidos se dejan como null/cadena vacía.
+- Un resultado sin datos no se liquida. Los fallos de proveedor se devuelven como reintento.
 
-- `POST https://veredicto.dpdns.org/v1/tiktok/perfil {"user":"..."}` — 0.08 USDC (hoy 501 sin cargo).
-- `POST https://veredicto.dpdns.org/v1/tiktok/comments {"id":"...","max":50}` — 0.05 USDC (hoy 501 sin cargo).
+La respuesta de comentarios a?ade `comments_meta` con cantidades solicitadas/entregadas, duplicados por ID, cobertura de campos, origen l?gico (`primary`/`fallback`) y `exhaustive=false`. Esto mide la respuesta observada y no garantiza que TikTok exponga todos los comentarios.
 
 ## MCP
 
-- MCP Streamable HTTP: https://veredicto.dpdns.org/tiktok-mcp/mcp
-- Tools: `tiktok_search` (router en local), `tiktok_perfil_info`, `tiktok_comments_info` (informativas, no liquidan).
+- Streamable HTTP: https://veredicto.dpdns.org/tiktok-mcp/mcp
+- Herramientas recomendadas: tiktok_search, tiktok_profile, tiktok_comments.
+- Compatibilidad: tiktok_perfil_info y tiktok_comments_info siguen disponibles como alias.
+- MCP público devuelve las instrucciones REST x402; no firma pagos. MCP_ALLOW_FREE_SEARCH=1 solo debe habilitarse en una instancia privada del operador. En ese modo las tres herramientas devuelven JSON normalizado y usan las claves canónicas compartidas por REST a través de Redis o del respaldo SQLite. La memoria es el último recurso y no se comparte entre procesos.

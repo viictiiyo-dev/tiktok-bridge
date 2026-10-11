@@ -14,3 +14,15 @@ __pycache__/
 .pytest_cache/
 cc-sdd/
 veredicto-skills-upstream/
+payment_requests.sqlite3
+payment_requests.sqlite3-wal
+payment_requests.sqlite3-shm
+src/payment_requests.sqlite3
+src/payment_requests.sqlite3-wal
+src/payment_requests.sqlite3-shm
+src/manual_payment_smoke.py.accidental-payment-audit-backup
+
+# Public TikTok response cache (local persistent fallback)
+src/tiktok_cache.sqlite3
+src/tiktok_cache.sqlite3-wal
+src/tiktok_cache.sqlite3-shm

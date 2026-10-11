@@ -29,6 +29,8 @@ Todo lo marcable lo haces tú con tu cuenta; lo técnico ya está vivo y verific
 
 ## 3. Verificación post-alta (mía cuando me digas)
 
+- [x] Moltbook: post en builds PUBLICADO (id 413efbae, challenge verificado 40.00). URL: https://www.moltbook.com (buscar VictorHelper2026).
+
 - [ ] Ficha A2A responde 200 con skill `tiktok-search`
 - [ ] Smithery lista el server y `tools/list` vía MCP público devuelve 3 tools
 - [ ] CDP discovery incluye payTo `0x139a…ED06E` en ruta tiktok

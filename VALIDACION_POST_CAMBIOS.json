@@ -1,0 +1,167 @@
+[
+  {
+    "query": "receta paella",
+    "status": "ok",
+    "latency_s": 7.8,
+    "n": 10,
+    "unique_ids": 10,
+    "cover_pct": 100.0,
+    "url_pct": 100.0,
+    "hashtags_string_pct": 100.0,
+    "iso_dates_pct": 100.0,
+    "avg_relevance": 0.85,
+    "top5": [
+      {
+        "id": "7456045846312914209",
+        "desc": "Receta aut\u00e9ntica de Paella Espa\u00f1ola. No guisantes, no chorizo, no mel\u00f3n. #recetas #recetasfaciles #recetastiktok #receta",
+        "likes": 51800,
+        "cover": true,
+        "url": "https://www.tiktok.com/@bdevikingo/video/7456045846312914209",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7494665719724952838",
+        "desc": "Paella para Semana Santa\ud83d\ude2e\u200d\ud83d\udca8\nSinceramente, el Paella Kit me encant\u00f3. Lo consiguen en @Foodie Shop \n\nCantidades:\n80 ml de ",
+        "likes": 22400,
+        "cover": true,
+        "url": "https://www.tiktok.com/@alessandra_anez/video/7494665719724952838",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7184405154295254278",
+        "desc": "La verdadera #paella de marisco. Nueva #receta #viral #lasrecetasdelaabuela ",
+        "likes": 21600,
+        "cover": true,
+        "url": "https://www.tiktok.com/@conbuenhumor/video/7184405154295254278",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7668007352318086422",
+        "desc": "Arroz con pollo ^paella^ \n.\n.\n.\n.\n.\n\n#food #receta #bocadillo #recetas #bocadillos",
+        "likes": 12500,
+        "cover": true,
+        "url": "https://www.tiktok.com/@gisssm/video/7668007352318086422",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7659063950088195350",
+        "desc": "Receta completa de mi paella!   \nSer\u00eda para 3 adultos y un ni\u00f1o aproximadamente!\n\n1/2 bolsas de calamares \n1 paquete de ",
+        "likes": 7062,
+        "cover": true,
+        "url": "https://www.tiktok.com/@laiamartylara/video/7659063950088195350",
+        "relevancia": 1.0
+      }
+    ],
+    "free_miss": false
+  },
+  {
+    "query": "cafeteria madrid",
+    "status": "ok",
+    "latency_s": 8.42,
+    "n": 10,
+    "unique_ids": 10,
+    "cover_pct": 100.0,
+    "url_pct": 100.0,
+    "hashtags_string_pct": 100.0,
+    "iso_dates_pct": 100.0,
+    "avg_relevance": 0.95,
+    "top5": [
+      {
+        "id": "7475301354374728982",
+        "desc": "MI NUEVA CAFETER\u00cdA FAVORITA @momo Dochi \ud83c\udf69\u2615\ufe0f\ud83e\udd29 \n\n\ud83d\udccdC/ del Pr\u00edncipe \n\nPuedes hacer tu propio mochi, mont\u00f3n de bebidas y donu",
+        "likes": 60500,
+        "cover": true,
+        "url": "https://www.tiktok.com/@carlotaadiazz/video/7475301354374728982",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7564485482919300370",
+        "desc": "fav coffee spot in madrid\u2615\ufe0f\ud83d\udc8c\ud83e\udd50 #cafeteriasmadrid #coffeemadrid #planesmadrid #brunchmadrid #madrid ",
+        "likes": 12800,
+        "cover": true,
+        "url": "https://www.tiktok.com/@gregoryandrade17/video/7564485482919300370",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7598353589051985174",
+        "desc": "este lugar no parece cafeter\u00eda (pero s\u00ed es) \u2615\ufe0f\ns\u00faper \u00fanica, cozy y con vibe de estar tomando caf\u00e9 en la casa de alguien ",
+        "likes": 10100,
+        "cover": true,
+        "url": "https://www.tiktok.com/@mariachi.zip/video/7598353589051985174",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7608272678683741462",
+        "desc": "Episodio 8 de nuevas aperturas en Madrid \u2615\ufe0f\u2b50\ufe0f \n\nSiempre os sino cafeter\u00edas, vamos a cambiar!!! Qu\u00e9 os gustar\u00eda el siguie",
+        "likes": 4776,
+        "cover": true,
+        "url": "https://www.tiktok.com/@ohlileven/video/7608272678683741462",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7688769555790892321",
+        "desc": "5 cafeter\u00edas nuevas en Madrid \u2615\ufe0f\n\n\ud83c\udf75 Casa Batata en Calle de Echegaray, 9, Centro, 28014 Madrid\n\n\ud83c\udf6a Tova Bakery en C. de A",
+        "likes": 4687,
+        "cover": true,
+        "url": "https://www.tiktok.com/@ohlileven/video/7688769555790892321",
+        "relevancia": 1.0
+      }
+    ],
+    "free_miss": false
+  },
+  {
+    "query": "rutina skincare",
+    "status": "ok",
+    "latency_s": 6.81,
+    "n": 10,
+    "unique_ids": 10,
+    "cover_pct": 100.0,
+    "url_pct": 100.0,
+    "hashtags_string_pct": 100.0,
+    "iso_dates_pct": 100.0,
+    "avg_relevance": 0.75,
+    "top5": [
+      {
+        "id": "7654184362266840342",
+        "desc": "Mi rutina de skincare de noche antes de los grandes eventos siempre incluye productos de @biodance_official  \ud83e\udd0d\u2728 #biodanc",
+        "likes": 751500,
+        "cover": true,
+        "url": "https://www.tiktok.com/@georginagio/video/7654184362266840342",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7593447778580221206",
+        "desc": "Publi. Mi rutina de skincare \ud83e\udee7\ud83e\uddf4@SKIN1004 US \n#centella #centellaskincare #skincare #skin1004 #koreanskincare    ",
+        "likes": 400900,
+        "cover": true,
+        "url": "https://www.tiktok.com/@its.bellido/video/7593447778580221206",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7579779104145394952",
+        "desc": "Espero les sirva mucho \ud83e\udef6\ud83c\udffb\ud83c\udf37 #skincare #rutinadeskincarema\u00f1ana #informaci\u00f3nparati #chicas #fyp ",
+        "likes": 107000,
+        "cover": true,
+        "url": "https://www.tiktok.com/@katheryn_aristizabal/video/7579779104145394952",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7672452451093466390",
+        "desc": "Mi rutina de skincare\ud83e\uddf4\u2b50\ufe0f\n#beauty #skincareroutine #skincaretips #pielgrasa #skincare101 \n@SEPHORA Espa\u00f1a @Tatcha @PURITO",
+        "likes": 12400,
+        "cover": true,
+        "url": "https://www.tiktok.com/@ceciiglesiascastro/video/7672452451093466390",
+        "relevancia": 1.0
+      },
+      {
+        "id": "7655034318577732886",
+        "desc": "el video que m\u00e1s me ped\u00eds siempre \ud83d\ude42\u200d\u2195\ufe0f mi rutina de skincare jejej #skincareroutine #skincare #cuidadodelapiel #glasskin",
+        "likes": 5998,
+        "cover": true,
+        "url": "https://www.tiktok.com/@danielaparada/video/7655034318577732886",
+        "relevancia": 1.0
+      }
+    ],
+    "free_miss": false
+  }
+]

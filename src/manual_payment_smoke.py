@@ -34,4 +34,11 @@ async def main():
               "cached:", body.get("cached"), "free_miss:", body.get("free_miss"))
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    import sys
+    if "--confirm-mainnet-payment" not in sys.argv[1:]:
+        print("BLOQUEADO: este script puede enviar un pago REAL de 0.08 USDC en Base mainnet.")
+        print("Para ejecutarlo deliberadamente, pasa --confirm-mainnet-payment.")
+        raise SystemExit(2)
+    print("ADVERTENCIA: se ejecutara una prueba de pago real de 0.08 USDC.")
+    asyncio.run(main())

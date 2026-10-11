@@ -1,22 +1,31 @@
-# TikTok Bridge — Consultas TikTok para agentes IA
+# TikTok Bridge — consultas públicas de TikTok para agentes IA
 
-Puente x402: 1 fetch con wallet sustituye cuenta + token + run async + polling + dataset de Apify. Solo TikTok público (search, perfil, comments). Sin login, sin contenido privado.
+API de pago por consulta mediante x402 en Base mainnet (USDC). Contrato estable, normalización multi-proveedor, respaldo cuando los resultados son vacíos, escasos, incompletos o lexicalmente débiles, deduplicación y ranking aproximado. Perfil y comentarios también usan un proveedor secundario cuando el principal falla o devuelve datos vacíos. Solo contenido público, sin login, sin contenido privado y sin re-host de vídeos.
 
-## Rutas de pago por petición (Base mainnet, USDC)
+## Endpoints REST de pago
 
-- `POST https://veredicto.dpdns.org/v1/tiktok/search {"q":"paella","max":20}` — 0.08 USDC. Videos: id, desc, autor, likes, fecha, hashtags, cover.
-- `POST https://veredicto.dpdns.org/v1/tiktok/perfil {"user":"cocina_es"}` — 0.08 USDC (backend en construcción: hoy responde 501 sin cargo).
-- `POST https://veredicto.dpdns.org/v1/tiktok/comments {"id":"...","max":50}` — 0.05 USDC (backend en construcción: hoy responde 501 sin cargo).
-- Sin `PAYMENT-SIGNATURE` responden 402 con requisitos + ejemplo output + header `PAYMENT-REQUIRED`. Con firma válida: verify → datos → settle → 200 + header `PAYMENT-RESPONSE`.
-- Regla free-miss: sin resultados no hay settle, no se cobra. Ventas reales verificadas on-chain (2 ventas / 0.16 USDC el día del lanzamiento).
+- POST https://veredicto.dpdns.org/v1/tiktok/search — {"q":"paella","max":20} — 0.08 USDC; max permitido 1–20.
+- POST https://veredicto.dpdns.org/v1/tiktok/perfil — {"user":"cocina_es"} — 0.08 USDC.
+- POST https://veredicto.dpdns.org/v1/tiktok/comments — {"id":"7635981647359380758","max":50} — 0.05 USDC. Cada comentario puede incluir id, autor, usuario/nombre públicos, texto, likes, fecha, respuestas e idioma.
+- Red: Base mainnet, CAIP-2 eip155:8453, USDC. Sin suscripción. No compartas claves privadas.
+- Sin PAYMENT-SIGNATURE: HTTP 402 con requisitos + ejemplo + PAYMENT-REQUIRED. Un cliente x402 firma y reintenta con la misma petición.
+- Si se agotan los proveedores y no se pueden verificar resultados: HTTP 202 con retry-hint. Si los proveedores responden sin vídeos utilizables: free_miss sin settle.
+- En search, cada vídeo incluye id, desc, autor, likes, fecha ISO-8601 UTC, hashtags como strings, cover y url; si están disponibles se añaden views, comments, shares, saves, duration, language, is_ad y relevancia, una heurística lexical de 0 a 1. La respuesta añade search_meta (contador de fuentes, si se usó respaldo, resultados, relevancia media y cobertura de portada/URL; sin revelar IDs de actores).
+
+La respuesta de comentarios a?ade `comments_meta` (`requested_count`, `returned_count`, `unique_id_count`, `duplicate_count`, `source_used`, `field_coverage_pct`, `exhaustive=false`). Es una medici?n de lo devuelto, no garant?a de exhaustividad.
 
 ## Interfaces
 
-- REST OpenAPI: https://veredicto.dpdns.org/v1/tiktok/search (vía openapi local)
+- REST / OpenAPI: https://veredicto.dpdns.org/v1/tiktok/search
 - Agent Card: https://veredicto.dpdns.org/tiktok/agent-card.json
-- MCP Streamable HTTP: https://veredicto.dpdns.org/tiktok-mcp/mcp (tools: tiktok_search, tiktok_perfil_info, tiktok_comments_info)
+- MCP Streamable HTTP: https://veredicto.dpdns.org/tiktok-mcp/mcp
+- MCP tools recomendadas: tiktok_search, tiktok_profile, tiktok_comments.
+- Aliases por compatibilidad: tiktok_perfil_info, tiktok_comments_info.
+- MCP público entrega instrucciones para el endpoint REST x402; no firma pagos automáticamente. MCP_ALLOW_FREE_SEARCH=1 solo debe usarse en una instancia privada del operador, donde las tres tools pueden ejecutar las consultas.
 - Skill: https://veredicto.dpdns.org/tiktok/skill.md
 - Condiciones: https://veredicto.dpdns.org/tiktok/terms
-- Salud: http://127.0.0.1:41243/health
+- Salud: /health
 
-La tool MCP `tiktok_search` consulta el router en local (uso del operador). Las tools `_info` describen requisitos de pago; no liquidan.
+## Fiabilidad y costes
+
+Redis es preferido; si está caído y CACHE_REQUIRE_REDIS=0, SQLite comparte la caché persistente entre REST y MCP. La memoria solo se usa si Redis y SQLite fallan. Las respuestas con datos se cachean durante una hora; los free-miss durante cinco minutos. Las claves normalizan query, perfil y vídeo. Los costes en src/coste_tiktok.jsonl son estimaciones PPR basadas en tarifas públicas, no facturas: fallos, respuestas vacías y tarifas no verificadas tienen coste desconocido. Los registros nuevos enlazan coste y venta por request_id; src/metrics_tiktok.jsonl agrega ruta, estado HTTP y latencia sin registrar IP, query, wallet ni firma. Ejecuta python auditar_rentabilidad.py para regenerar la auditoría local.

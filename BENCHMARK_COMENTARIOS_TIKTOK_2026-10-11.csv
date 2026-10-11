@@ -1,0 +1,7 @@
+﻿video,video_reported_comments,provider,requested,dataset_rows,usable_comments,unique_comments,duplicate_comments,unique_pct,text_pct,author_pct,id_pct,date_pct,likes_pct,replies_pct,latency_seconds,error,invoice_cost,apify_run_status,apify_usage_usd,apify_status_note
+paella,290,Clockworks principal,20,20,20,20,0,100.0,100.0,100.0,100.0,100.0,100.0,0.0,9.672,,not_checked,SUCCEEDED,0.025,Scraped 20 top-level comments successfully.
+paella,290,API Dojo fallback,20,0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,25.469,http_400,not_checked,TIMED-OUT,0.003,Actor timed out; run status message asked to subscribe to a paid Apify plan.
+cafeteria,167,Clockworks principal,20,20,20,20,0,100.0,100.0,100.0,100.0,100.0,100.0,0.0,17.968,,not_checked,SUCCEEDED,0.025,Scraped 20 top-level comments successfully.
+cafeteria,167,API Dojo fallback,20,0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,25.484,http_400,not_checked,TIMED-OUT,0.003,Actor timed out; run status message asked to subscribe to a paid Apify plan.
+skincare,373,Clockworks principal,20,20,20,20,0,100.0,100.0,100.0,100.0,100.0,100.0,0.0,11.485,,not_checked,SUCCEEDED,0.025,Scraped 20 top-level comments successfully.
+skincare,373,API Dojo fallback,20,0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,25.5,http_400,not_checked,TIMED-OUT,0.003,Actor timed out; run status message asked to subscribe to a paid Apify plan.
