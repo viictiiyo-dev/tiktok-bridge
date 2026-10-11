@@ -1,0 +1,22 @@
+# TikTok Bridge — Consultas TikTok para agentes IA
+
+Puente x402: 1 fetch con wallet sustituye cuenta + token + run async + polling + dataset de Apify. Solo TikTok público (search, perfil, comments). Sin login, sin contenido privado.
+
+## Rutas de pago por petición (Base mainnet, USDC)
+
+- `POST https://veredicto.dpdns.org/v1/tiktok/search {"q":"paella","max":20}` — 0.08 USDC. Videos: id, desc, autor, likes, fecha, hashtags, cover.
+- `POST https://veredicto.dpdns.org/v1/tiktok/perfil {"user":"cocina_es"}` — 0.08 USDC (backend en construcción: hoy responde 501 sin cargo).
+- `POST https://veredicto.dpdns.org/v1/tiktok/comments {"id":"...","max":50}` — 0.05 USDC (backend en construcción: hoy responde 501 sin cargo).
+- Sin `PAYMENT-SIGNATURE` responden 402 con requisitos + ejemplo output + header `PAYMENT-REQUIRED`. Con firma válida: verify → datos → settle → 200 + header `PAYMENT-RESPONSE`.
+- Regla free-miss: sin resultados no hay settle, no se cobra. Ventas reales verificadas on-chain (2 ventas / 0.16 USDC el día del lanzamiento).
+
+## Interfaces
+
+- REST OpenAPI: https://veredicto.dpdns.org/v1/tiktok/search (vía openapi local)
+- Agent Card: https://veredicto.dpdns.org/tiktok/agent-card.json
+- MCP Streamable HTTP: https://veredicto.dpdns.org/tiktok-mcp/mcp (tools: tiktok_search, tiktok_perfil_info, tiktok_comments_info)
+- Skill: https://veredicto.dpdns.org/tiktok/skill.md
+- Condiciones: https://veredicto.dpdns.org/tiktok/terms
+- Salud: http://127.0.0.1:41243/health
+
+La tool MCP `tiktok_search` consulta el router en local (uso del operador). Las tools `_info` describen requisitos de pago; no liquidan.

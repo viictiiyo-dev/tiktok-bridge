@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+redis
+coinbase-cdp-sdk
+x402
+web3
+eth-account
+mcp

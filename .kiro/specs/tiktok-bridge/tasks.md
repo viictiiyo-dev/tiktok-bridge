@@ -1,0 +1,73 @@
+# Implementation Plan — tiktok-bridge
+
+- [x] 1. Contrato /v1 + fixtures
+- [x] 1.1 (P) Schemas fijos + ejemplos 402 en `src/server_v1.py`
+  - POST /v1/tiktok/search|perfil|comments con validación y free-miss sin cobrar.
+  - Condición observable: `openapi.json` expone 3 rutas y cada 402 trae ejemplo output real.
+  - _Boundary: contract_
+  - _Requirements: 1_
+- [x] 1.2 (P) `openapi.json` + `llms.txt` + `skill.md` día 1
+  - Condición observable: GET /openapi.json, /llms.txt, /skill.md devuelven 200.
+  - _Boundary: discovery_
+  - _Requirements: 1, 5_
+
+- [x] 2. Paywall Base/CDP + ledger
+- [x] 2.1 Migrar `_methods/challenge/verify/settle` desde AGENTE COMPARADOR a `src/paywall.py`
+  - Precios 80000/80000/50000, wallet separada, solo Base mainnet, testnets fuera.
+  - Condición observable: POST sin firma → 402 con `how`; firma inválida → 402, nunca 500.
+  - _Boundary: paywall_
+  - _Depends: 1.1_
+  - _Requirements: 2_
+- [x] 2.2 Ledger + idempotency + `/stats` con token
+  - Solo `settled_by_facilitator=true` cuenta como venta; doble-settle bloqueado.
+  - Condición observable: 2 pagos mismo idempotency key → 1 venta en ledger.
+  - _Boundary: paywall_
+  - _Depends: 2.1_
+  - _Requirements: 2, 4_
+
+- [x] 3. Router Apify + fallback
+- [x] 3.1 Ampliar `src/tiktok_router.py`: run + poll + Dataset + normaliza
+  - `httpx.AsyncClient(timeout=httpx.Timeout(10.0, connect=60.0))` (gotcha Context7: default 5s insuficiente para polling 30s; context manager async).
+  - Input fijo {searchQuery, maxResults, proxyCountry: ES}; actor top + fallback; timeout duro 60s → 202 + retry-hint.
+  - Condición observable: query miss devuelve videos normalizados o free-miss, nunca actorId expuesto.
+  - _Boundary: router_
+  - _Depends: 1.1_
+  - _Requirements: 3_
+- [x] 3.2 Switch auto + healthcheck + log coste/llamada
+  - Si top falla 3 seguidas → fallback automático; alerta margen <3x.
+  - Condición observable: con top caído simulado, las calls salen por fallback sin deploy.
+  - _Boundary: router_
+  - _Depends: 3.1_
+  - _Requirements: 3, 4_
+
+- [x] 4. Caché Redis 1h
+- [x] 4.1 `src/cache.py` con `redis.asyncio` + `await aclose()`
+  - Keys `tiktok:search:{q}:{max}|perfil:{user}|comments:{id}`, TTL 3600.
+  - Condición observable: 2ª misma query <2s con flag `cached:true` y coste 0.
+  - _Boundary: cache_
+  - _Depends: 3.1_
+  - _Requirements: 3, 4_
+
+- [x] 5. Middleware + discovery
+- [x] 5.1 (P) Rate-limit IP + wallet + 429 via `@app.middleware("http")`
+  - Condición observable: 61 req/min misma IP → 429 con retry 60s.
+  - _Boundary: contract_
+  - _Depends: 1.1_
+  - _Requirements: 4_
+- [x] 5.2 (P) Bazaar `OutputConfig` + 3 tools MCP + terms/robots/sitemap
+  - HECHO: extension Bazaar oficial viva en el 402 público + `src/mcp_server.py` (3 tools) + `arrancar_tiktok.bat` + supervisor con :41243/:41245. Catálogo CDP aún sin indexar (0/100 primera página); reverificar tras tráfico.
+  - Solo público; login/privado → free-miss; metadata + cover URL, sin re-host.
+  - Condición observable: listing Bazaar muestra ejemplo real y MCP expone 3 tools.
+  - _Boundary: discovery_
+  - _Depends: 1.1_
+  - _Requirements: 5_
+
+- [x] 6. E2E + settle real previo
+- [x] 6.1* Tests contrato + free-miss + ejemplos (`tests/test_contract.py`)
+  - Condición observable: `pytest` verde en schemas, free-miss y 402 con ejemplo.
+  - _Requirements: 1, 2_
+- [x] 6.2 Pago test → 200 real en testnet, luego 1 settle mainnet mínimo antes de anunciar cobro
+  - VENTA 1 2026-10-11: $0.08, tx f52140…b1ea (recuperada por logs). VENTA 2: $0.08, tx 0x7e5b…3na4 (capturada ya con el fix). Total /stats: 2 ventas / 0.16 USDC. MCP público en /tiktok-mcp/mcp + autostart cableado.
+  - Condición observable: `/stats` muestra 1 venta `settled_by_facilitator` mainnet; sin esto no se publica Bazaar.
+  - _Depends: 2.2, 3.2, 4.1, 5.2_
+  - _Requirements: 2, 3, 5_

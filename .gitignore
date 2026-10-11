@@ -1,0 +1,15 @@
+.env
+PAYER_KEY.txt
+*_token.txt
+cdp*.txt
+*_TOKEN.txt
+ventas_tiktok.jsonl
+seen_tx.json
+settle_last.json
+coste_tiktok.jsonl
+server-tiktok.log
+mcp-tiktok.log
+*.log.1
+__pycache__/
+.pytest_cache/
+cc-sdd/
