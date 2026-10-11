@@ -13,7 +13,7 @@ Todo lo marcable lo haces tú con tu cuenta; lo técnico ya está vivo y verific
 
 ## 1. Altas (por orden de valor)
 
-1. **A2A Registry** — nueva ficha de agente con `https://veredicto.dpdns.org/tiktok/agent-card.json` (no dupliques la de Veredicto; es segundo agente misma org). Reclama igual que la anterior.
+1. **A2A Registry** — ✅ REGISTRADO por operador (2026-10-11, vía GitHub repo `kaattaallaa-sketch/tiktok-bridge`). Fichas verificadas 200 en dominio + GitHub raw. Listado en console pendiente de confirmación visual (su API pública no expone search).
 2. **Smithery** — publica `tiktok-bridge` (nuevo namespace o mismo owner `viictiiyo`): URL MCP `https://veredicto.dpdns.org/tiktok-mcp/mcp`, 3 tools. Descripción corta: "Pay-per-call TikTok search for agents, $0.08 via x402 on Base. No API key."
 3. **GitHub `viictiiyo-dev/veredicto-skills`** — añade `tiktok/SKILL.md` (copia de `TIKTOK/SKILL.md`) para el flujo `npx skills add`.
 4. **agentskill.sh** — envía `https://veredicto.dpdns.org/tiktok/skill.md`.
