@@ -14,7 +14,7 @@ Todo lo marcable lo haces tú con tu cuenta; lo técnico ya está vivo y verific
 ## 1. Altas (por orden de valor)
 
 1. **A2A Registry** — ✅ REGISTRADO por operador (2026-10-11, vía GitHub repo `kaattaallaa-sketch/tiktok-bridge`). Fichas verificadas 200 en dominio + GitHub raw. Listado en console pendiente de confirmación visual (su API pública no expone search).
-2. **Smithery** — ✅ PUBLICADO por operador (2026-10-11): `viictiiyo/bridge`, deploy SUCCESS, 5 tools verificadas en registry API. Falta: descripción (vacía, quality 55/100) → pegar el copy de abajo en Settings.
+2. **Smithery** — ✅ PUBLICADO por operador (2026-10-11): `viictiiyo/bridge`, deploy SUCCESS, 5 tools verificadas en registry API. Descripción pegada (quality 55→65). Registry API aún sirve desc vacía (caché) y el search no nos lista (propagación pendiente).
 3. **GitHub `viictiiyo-dev/veredicto-skills`** — añade `tiktok/SKILL.md` (copia de `TIKTOK/SKILL.md`) para el flujo `npx skills add`.
 4. **agentskill.sh** — envía `https://veredicto.dpdns.org/tiktok/skill.md`.
 5. **x402-list** — nuevo submit del endpoint (el anterior era solo Veredicto).
